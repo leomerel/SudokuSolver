@@ -9,6 +9,7 @@ public:
 
 	Sudoku variables;
 	std::vector<int> domain { 1,2,3,4,5,6,7,8,9 };
+	std::vector<std::vector<int>> domains;
 
 	std::vector<std::tuple<int,int>> constraints;
 	bool checkConstraints(int var, int value, std::vector<std::tuple<int, int>> assignement);
@@ -20,6 +21,7 @@ public:
 
 private:
 	void createConstraints();
+	void initDomains();
 
 };
 

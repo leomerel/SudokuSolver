@@ -4,6 +4,7 @@ CSP::CSP(Sudoku sudo):variables(sudo)
 {
 	createConstraints();
 	setUnassignedValues();
+	initDomains();
 }
 
 bool CSP::checkConstraints(int var, int value, std::vector<std::tuple<int, int>> assignement)
@@ -74,8 +75,8 @@ void CSP::createConstraints()
 {
 	for (int i = 0; i < 9; i++)
 	{
-		for (int j = 0; j < 9; j++) {
-			
+		for (int j = 0; j < 9; j++) 
+		{			
 			if (variables.grid[i][j] == 0) 
 			{
 				int pos = i * 9 + j;
@@ -107,6 +108,24 @@ void CSP::createConstraints()
 					}
 				}				
 			}			
+		}
+	}
+}
+
+void CSP::initDomains()
+{
+	for (int i = 0; i < 9; i++)
+	{
+		for (int j = 0; j < 9; j++)
+		{
+			if (variables.grid[i][j] == 0)
+			{
+				domains.emplace_back(std::vector<int>({ 1,2,3,4,5,6,7,8,9 }));
+			}
+			else
+			{
+				domains.emplace_back(std::vector<int>({}));
+			}
 		}
 	}
 }
