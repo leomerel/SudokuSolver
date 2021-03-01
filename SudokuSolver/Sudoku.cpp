@@ -2,17 +2,49 @@
 
 Sudoku::Sudoku()
 {
-	/*grid.emplace_back(new std::vector<int>({ 0, 7, 2, 0, 0, 4, 3, 0, 5 }));
-	grid.emplace_back(new std::vector<int>({ 0, 9, 0, 8, 5, 0, 2, 0, 0 }));
-	grid.emplace_back(new std::vector<int>({ 0, 5, 8, 7, 2, 3, 1, 0, 0 }));
-	grid.emplace_back(new std::vector<int>({ 3, 4, 0, 0, 7, 0, 9, 2, 0 }));
-	grid.emplace_back(new std::vector<int>({ 9, 1, 0, 0, 8, 2, 0, 0, 6 }));
-	grid.emplace_back(new std::vector<int>({ 0, 2, 6, 0, 0, 0, 0, 1, 7 }));
-	grid.emplace_back(new std::vector<int>({ 0, 0, 0, 0, 4, 0, 8, 0, 3 }));
-	grid.emplace_back(new std::vector<int>({ 7, 0, 1, 0, 0, 9, 0, 4, 0 }));
-	grid.emplace_back(new std::vector<int>({ 5, 3, 4, 0, 6, 0, 0, 0, 0 }));*/
-
+    //Test sudoku
     grid = { { 0, 7, 2, 0, 0, 4, 3, 0, 5 },{ 0, 9, 0, 8, 5, 0, 2, 0, 0 },{ 0, 5, 8, 7, 2, 3, 1, 0, 0 },{ 3, 4, 0, 0, 7, 0, 9, 2, 0 },{ 9, 1, 0, 0, 8, 2, 0, 0, 6 },{ 0, 2, 6, 0, 0, 0, 0, 1, 7 },{ 0, 0, 0, 0, 4, 0, 8, 0, 3 },{ 7, 0, 1, 0, 0, 9, 0, 4, 0 },{ 5, 3, 4, 0, 6, 0, 0, 0, 0 } };
+}
+
+Sudoku::Sudoku(std::string filename)
+{
+
+    std::ifstream myFile;
+    myFile.open(filename);
+    std::string line;
+
+    std::vector<std::vector<int>> newGrid;
+
+    if (myFile.is_open())
+    {
+        while (std::getline(myFile, line))
+        {
+            std::vector<int> newLine;
+            for (char c : line)
+            {
+                if (c == '!' || c == '-')
+                {
+                    continue;
+                }
+                else if (c == '.')
+                {
+                    newLine.emplace_back(0);
+                }
+                else
+                {
+                    newLine.emplace_back(c - '0');
+                }
+            }
+            if (newLine.size() == 9)
+            {
+                newGrid.emplace_back(newLine);
+            }
+        }
+        myFile.close();
+    }
+    else std::cout << "Unable to open file\n";
+
+    grid = newGrid;
 }
 
 void Sudoku::display()
@@ -37,11 +69,11 @@ void Sudoku::display()
             if ((j % 3) == 0) 
             {
                 line.append("| ");
-                line.append(std::to_string(grid[i][j]) + " ");
+                grid[i][j] != 0 ? line.append(std::to_string(grid[i][j]) + " ") : line.append(". ");
             }
             else
             {
-                line.append(std::to_string(grid[i][j]) + " ");
+                grid[i][j] != 0 ? line.append(std::to_string(grid[i][j]) + " ") : line.append(". ");
             }
         }
         line.append("|\n");

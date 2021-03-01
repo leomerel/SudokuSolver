@@ -3,11 +3,13 @@
 #include <string>
 #include <tuple>
 #include <iostream>
+#include <fstream>
 
 class Sudoku
 {
 public:
 	Sudoku();
+	Sudoku(std::string filename);
 
 	void display();
 

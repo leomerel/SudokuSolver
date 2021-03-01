@@ -147,6 +147,10 @@
     <ClInclude Include="CSP.h" />
     <ClInclude Include="Sudoku.h" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="sudoku1.ss" />
+    <None Include="sudoku2.ss" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
