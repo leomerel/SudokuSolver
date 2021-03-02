@@ -48,6 +48,13 @@ int main()
         std::cout << "\nEntrez le nom du fichier .ss a utiliser : ";
         std::cin >> filename;
 
+        std::string end = ".ss";
+
+        if (filename.compare(filename.size() - 3, 3, end) != 0)
+        {
+            filename.append(end);
+        }
+
         Sudoku un = Sudoku(filename);
         un.display();
 
