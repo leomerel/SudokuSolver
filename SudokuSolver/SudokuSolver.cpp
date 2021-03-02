@@ -80,7 +80,6 @@ std::vector<std::tuple<int,int>> recursiveBacktracking(std::vector<std::tuple<in
 Sudoku backtrackingSearch(CSP csp)
 {
     std::vector<std::tuple<int, int>> assignement = recursiveBacktracking({}, csp);
-    std::cout << "\n" << std::get<0>(assignement[0]) << std::get<1>(assignement[0]) << assignement.size() << "\n";
     Sudoku result = csp.variables;
     result.complete(assignement);
     return result;
@@ -88,16 +87,50 @@ Sudoku backtrackingSearch(CSP csp)
 
 int main()
 {
-    std::cout << "Hello World!\n";
+    std::cout << "Bienvenue sur SudokuSolver !\n";
+    std::string filename;
+    bool solve = true;
 
-    Sudoku un = Sudoku();
-    un.display();
+    while (solve)
+    {
+        std::cout << "\nEntrez le nom du fichier .ss a utiliser : ";
+        std::cin >> filename;
 
-    CSP cehesspet = CSP(un);
+        std::string end = ".ss";
 
-    Sudoku result = backtrackingSearch(cehesspet);
-    result.display();
+        if (filename.compare(filename.size() - 3, 3, end) != 0)
+        {
+            filename.append(end);
+        }
 
-    std::cout << recursiveCount;
+        Sudoku un = Sudoku(filename);
+        un.display();
+
+        CSP csp = CSP(un);
+
+        Sudoku result = backtrackingSearch(csp);
+        result.display();
+
+        std::cout << recursiveCount << " executions de la boucle recursive.\n";
+
+        std::cout << "Voulez vous tester un autre sudoku ? (y/n)";
+        std::string other;
+        std::cin >> other;
+        if (other == "n" || other == "N" || other == "no")
+        {
+            solve = false;
+        }
+   
+        //nettoyage de la console
+#if defined _WIN32
+    system("cls");
+#elif defined (__LINUX__) || defined(__gnu_linux__) || defined(__linux__)
+    system("clear");
+#elif defined (__APPLE__)
+    system("clear");
+#endif
+
+    }
+    
 }
 
