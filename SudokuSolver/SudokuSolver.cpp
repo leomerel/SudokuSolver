@@ -1,5 +1,6 @@
 #include "Sudoku.h"
 #include "CSP.h"
+#include <deque>
 
 int recursiveCount = 0;
 
@@ -29,11 +30,14 @@ bool removeInconsistentValues(std::tuple<int, int> constraint, CSP* csp)
 
 CSP AC3(CSP initCsp)
 {
-    std::vector<std::tuple<int, int>> queue = initCsp.constraints;
+    //std::vector<std::tuple<int, int>> queue = initCsp.constraints;
+    std::deque<std::tuple<int, int>> queue;
+    std::copy(initCsp.constraints.begin(), initCsp.constraints.end(), std::inserter(queue, queue.end()));
     while (queue.size() > 0)
     {
         std::tuple<int, int> firstContraint = queue[0];
-        queue.erase(queue.begin());
+        //queue.erase(queue.begin());
+        queue.pop_front();
         if (removeInconsistentValues(firstContraint, &initCsp))
         {
             for (std::tuple<int,int> neighbors : initCsp.constraints)

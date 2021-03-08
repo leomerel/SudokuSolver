@@ -90,6 +90,7 @@ int CSP::selectUnassignedVariable(std::vector<std::tuple<int, int>> assignement)
 					mrvVarDomainSize = domains[mrvVar].size();
 				}
 			}
+			//return var;
 		}
 	}
 	return mrvVar;
