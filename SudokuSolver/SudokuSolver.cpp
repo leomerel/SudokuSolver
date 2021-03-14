@@ -4,6 +4,11 @@
 
 int recursiveCount = 0;
 
+std::vector<int> orderDomainValue(CSP csp)
+{
+    return {0};
+}
+
 bool removeInconsistentValues(std::tuple<int, int> constraint, CSP* csp)
 {
     int xi = std::get<0>(constraint);
@@ -99,6 +104,13 @@ int main()
     {
         std::cout << "\nEntrez le nom du fichier .ss a utiliser : ";
         std::cin >> filename;
+
+        while (filename.size() <= 3)
+        {
+            std::cout << "\nLe nom du fichier est trop court (minimum 3 caracteres)";
+            std::cout << "\nEntrez le nom du fichier .ss a utiliser : ";
+            std::cin >> filename;
+        }
 
         std::string end = ".ss";
 
