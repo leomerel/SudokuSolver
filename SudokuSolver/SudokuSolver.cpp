@@ -4,6 +4,9 @@
 #include <algorithm>
 
 int recursiveCount = 0;
+bool ac3 = true;
+bool leastContrainingValue = true;
+bool mrv = true;
 
 std::vector<int> orderDomainValue(int var, std::vector<std::tuple<int, int>> assignement, CSP csp)
 {
@@ -112,17 +115,25 @@ std::vector<std::tuple<int,int>> recursiveBacktracking(std::vector<std::tuple<in
         return assignement; //assignement sous la forme d'un sudoku complété
     }
 
-    int var = csp.selectUnassignedVariable(assignement);
+    int var = csp.selectUnassignedVariable(assignement,mrv);
     std::vector<int> orderListDomain = orderDomainValue(var, assignement, csp);
-    for (int value : orderListDomain)
+    for (int value : (leastContrainingValue? orderListDomain : csp.domains[var]))
     {
         //std::cout << "\nSelected case : " << var << " with value " << value << " on iteration n" << recursiveCount;
 
         if (csp.checkConstraints(var, value, assignement))
         {
             assignement.emplace_back(std::make_tuple(var, value));
-            CSP modifiedCSP = AC3(csp);
-            std::vector<std::tuple<int, int>> result = recursiveBacktracking(assignement, modifiedCSP);
+            std::vector<std::tuple<int, int>> result;
+            if (ac3)
+            {
+                CSP modifiedCSP = AC3(csp);
+                result = recursiveBacktracking(assignement, modifiedCSP);
+            }
+            else
+            {
+                result = recursiveBacktracking(assignement, csp);
+            }
             if (std::get<1>(result[0]) != 0)
             {
                 return result;

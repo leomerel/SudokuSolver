@@ -14,7 +14,7 @@ public:
 	std::vector<std::tuple<int,int>> constraints;
 	bool checkConstraints(int var, int value, std::vector<std::tuple<int, int>> assignement);
 
-	int selectUnassignedVariable(std::vector<std::tuple<int,int>> assignement);
+	int selectUnassignedVariable(std::vector<std::tuple<int,int>> assignement, bool mrv);
 
 	std::vector<int> unassignedValues;
 	void setUnassignedValues();

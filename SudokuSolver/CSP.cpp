@@ -35,7 +35,7 @@ bool CSP::checkConstraints(int var, int value, std::vector<std::tuple<int, int>>
 	return true;
 }
 
-int CSP::selectUnassignedVariable(std::vector<std::tuple<int, int>> assignement)
+int CSP::selectUnassignedVariable(std::vector<std::tuple<int, int>> assignement, bool mrv)
 {
 	bool alreadyAssigned = false;
 	int mrvVar;
@@ -56,41 +56,47 @@ int CSP::selectUnassignedVariable(std::vector<std::tuple<int, int>> assignement)
 		}
 		if (!alreadyAssigned)
 		{
-			if (domains[var].size() < mrvVarDomainSize)
+			if (mrv) 
 			{
-				mrvVar = var;
-				mrvVarDomainSize = domains[mrvVar].size();
-			}
-			else if (domains[var].size() == domains[mrvVar].size())
-			{
-				int constraintsVar = 0;
-				for (auto concernedConstraints : constraints)
-				{
-					if (std::get<0>(concernedConstraints) == var)
-					{
-						bool alreadyAssignedDHvar = false;
-						for (std::tuple<int, int> assigned : assignement)
-						{
-							if (std::get<1>(concernedConstraints) == std::get<0>(assigned))
-							{
-								alreadyAssignedDHvar = true;
-								break;
-							}
-						}
-						if (variables.grid[std::get<1>(concernedConstraints) / 9][std::get<1>(concernedConstraints) % 9] == 0 || !alreadyAssignedDHvar)
-						{
-							constraintsVar += 1;
-						}
-					}
-				}
-				if (constraintsVar > constraintsMrvVar)
+				if (domains[var].size() < mrvVarDomainSize)
 				{
 					mrvVar = var;
-					constraintsMrvVar = constraintsVar;
 					mrvVarDomainSize = domains[mrvVar].size();
 				}
+				else if (domains[var].size() == domains[mrvVar].size())
+				{
+					int constraintsVar = 0;
+					for (auto concernedConstraints : constraints)
+					{
+						if (std::get<0>(concernedConstraints) == var)
+						{
+							bool alreadyAssignedDHvar = false;
+							for (std::tuple<int, int> assigned : assignement)
+							{
+								if (std::get<1>(concernedConstraints) == std::get<0>(assigned))
+								{
+									alreadyAssignedDHvar = true;
+									break;
+								}
+							}
+							if (variables.grid[std::get<1>(concernedConstraints) / 9][std::get<1>(concernedConstraints) % 9] == 0 || !alreadyAssignedDHvar)
+							{
+								constraintsVar += 1;
+							}
+						}
+					}
+					if (constraintsVar > constraintsMrvVar)
+					{
+						mrvVar = var;
+						constraintsMrvVar = constraintsVar;
+						mrvVarDomainSize = domains[mrvVar].size();
+					}
+				}
 			}
-			//return var;
+			else
+			{
+				return var;
+			}
 		}
 	}
 	return mrvVar;
