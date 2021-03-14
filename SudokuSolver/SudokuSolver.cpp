@@ -1,12 +1,58 @@
 #include "Sudoku.h"
 #include "CSP.h"
 #include <deque>
+#include <algorithm>
 
 int recursiveCount = 0;
 
-std::vector<int> orderDomainValue(CSP csp)
+std::vector<int> orderDomainValue(int var, std::vector<std::tuple<int, int>> assignement, CSP csp)
 {
-    return {0};
+    std::vector<int> orderDomainValue;
+    std::vector<std::tuple<int, int>> orderDomainTuple;
+
+    for (int value : csp.domains[var])
+    {
+        std::vector<std::tuple<int, int>> localAssignement = assignement;
+        localAssignement.emplace_back(std::make_tuple(var, value));
+        std::vector <int> unassignedValues;
+        int remainDomainSize = 0;
+
+        for (int i = 0; i < 9; i++)
+        {
+            for (int j = 0; j < 9; j++) {
+                if (csp.variables.grid[i][j] == 0)
+                {
+                    bool alreadyassigned = false;
+                    for (auto assigned : localAssignement)
+                    {
+                        if (std::get<0>(assigned) == i * 9 + j)
+                        {
+                            alreadyassigned = true;
+                        }
+                    }
+
+                    if (!alreadyassigned)
+                    {
+                        remainDomainSize += csp.domains[i * 9 + j].size();
+                    }
+                }
+            }
+        }
+
+        orderDomainTuple.emplace_back(std::make_tuple(value, remainDomainSize)); 
+    }
+
+    std::sort(orderDomainTuple.begin(), orderDomainTuple.end(),
+        [](const std::tuple<int, int>& a,
+            const std::tuple<int, int>& b) { return (std::get<1>(a) < std::get<1>(b)); });
+
+    for (auto tuple : orderDomainTuple)
+    {
+        orderDomainValue.emplace_back(std::get<0>(tuple));
+    }
+
+
+    return orderDomainValue;
 }
 
 bool removeInconsistentValues(std::tuple<int, int> constraint, CSP* csp)
@@ -67,7 +113,8 @@ std::vector<std::tuple<int,int>> recursiveBacktracking(std::vector<std::tuple<in
     }
 
     int var = csp.selectUnassignedVariable(assignement);
-    for (int value : csp.domains[var])
+    std::vector<int> orderListDomain = orderDomainValue(var, assignement, csp);
+    for (int value : orderListDomain)
     {
         //std::cout << "\nSelected case : " << var << " with value " << value << " on iteration n" << recursiveCount;
 
@@ -118,7 +165,6 @@ int main()
         {
             filename.append(end);
         }
-
         Sudoku un = Sudoku(filename);
         un.display();
 

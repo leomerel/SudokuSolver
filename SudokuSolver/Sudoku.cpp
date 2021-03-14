@@ -8,7 +8,6 @@ Sudoku::Sudoku()
 
 Sudoku::Sudoku(std::string filename)
 {
-
     std::ifstream myFile;
     myFile.open(filename);
     std::string line;
