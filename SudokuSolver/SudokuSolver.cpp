@@ -156,66 +156,97 @@ int main()
 {
     std::cout << "Bienvenue sur SudokuSolver !\n";
     std::string filename;
+    std::ifstream recordFile;
     bool solve = true;
+    bool ending = true;
 
     while (solve)
     {
-        std::cout << "Parametres du backtracking : \nAC-3 : " << std::to_string(ac3) << "\nMinimum Remaining Value et Degree Heuristic : " <<
-            std::to_string(mrv) << "\nLeast Constraining Value : " << std::to_string(leastContrainingValue);
-
-        std::cout << "\n\nEntrez le nom du fichier .ss a utiliser : ";
-        std::cin >> filename;
-
-        while (filename.size() <= 3)
+        do
         {
-            std::cout << "\nLe nom du fichier est trop court (minimum 3 caracteres)";
-            std::cout << "\nEntrez le nom du fichier .ss a utiliser : ";
-            std::cin >> filename;
+            if (ending)
+            {
+                std::cout << "Parametres du backtracking : \nAC-3 : " << std::to_string(ac3) << "\nMinimum Remaining Value et Degree Heuristic : " <<
+                    std::to_string(mrv) << "\nLeast Constraining Value : " << std::to_string(leastContrainingValue);
+
+                std::cout << "\n\nEntrez le nom du fichier .ss a utiliser : ";
+                std::cin >> filename;
+            }
+            else
+            {
+                std::cout << "Le nom du sudoku n'existe pas veuillez reessayer : ";
+                std::cin >> filename;
+            }
+
+            ending = false;
+
+            while (filename.size() <= 3)
+            {
+                std::cout << "\nLe nom du fichier est trop court (minimum 3 caracteres)";
+                std::cout << "\nEntrez le nom du fichier .ss a utiliser : ";
+                std::cin >> filename;
+            }
+
+            std::string end = ".ss";
+
+            if (filename.compare(filename.size() - 3, 3, end) != 0)
+            {
+                filename.append(end);
+            }
+            recordFile.open(filename);
+
+            if (recordFile.good())
+            {
+                ending = true;
+                recordFile.close();
+                Sudoku un = Sudoku(filename);
+                un.display();
+
+                CSP csp = CSP(un);
+
+                Sudoku result = backtrackingSearch(csp);
+                result.display();
+
+                std::cout << recursiveCount << " executions de la boucle recursive.\n";
+
+                std::cout << "Voulez vous tester un autre sudoku ? (y/n)";
+                std::string other;
+                std::cin >> other;
+                if (other == "n" || other == "N" || other == "no")
+                {
+                    solve = false;
+                    break;
+                }
+
+                std::cout << "\nVoulez vous changer les parametres du backtracking ? (y/n)";
+                std::string change;
+                std::cin >> change;
+                if (change == "y" || change == "Y" || change == "yes")
+                {
+                    std::cout << "\nIndiquer 'n' pour desactiver (actif par defaut)";
+                    std::string strAc3, strMRV, strLCV;
+                    std::cout << "\nAC-3 : ";
+                    std::cin >> strAc3;
+                    std::cout << "\nMinimum Remaining Value et Degree Heuristic : ";
+                    std::cin >> strMRV;
+                    std::cout << "\nLeast Constraining Value : ";
+                    std::cin >> strLCV;
+
+                    strAc3 == "n" ? ac3 = false : ac3 = true;
+                    strMRV == "n" ? mrv = false : mrv = true;
+                    strLCV == "n" ? leastContrainingValue = false : leastContrainingValue = true;
+                }
+            }
+        }         
+        while (recordFile.fail());
+        {
+            if (!ending)
+            {
+                std::cout << "Le nom du sudoku n'existe pas veuillez reessayer : ";
+                std::cin >> filename;
+                recordFile.open(filename);
+            }
         }
-
-        std::string end = ".ss";
-
-        if (filename.compare(filename.size() - 3, 3, end) != 0)
-        {
-            filename.append(end);
-        }
-        Sudoku un = Sudoku(filename);
-        un.display();
-
-        CSP csp = CSP(un);
-
-        Sudoku result = backtrackingSearch(csp);
-        result.display();
-
-        std::cout << recursiveCount << " executions de la boucle recursive.\n";
-
-        std::cout << "Voulez vous tester un autre sudoku ? (y/n)";
-        std::string other;
-        std::cin >> other;
-        if (other == "n" || other == "N" || other == "no")
-        {
-            solve = false;
-            break;
-        }
-
-        std::cout << "\nVoulez vous changer les parametres du backtracking ? (y/n)";
-        std::string change;
-        std::cin >> change;
-        if (change == "y" || change == "Y" || change == "yes")
-        {
-            std::cout << "\nIndiquer 'n' pour desactiver (actif par defaut)";
-            std::string strAc3, strMRV, strLCV;
-            std::cout << "\nAC-3 : ";
-            std::cin >> strAc3;
-            std::cout << "\nMinimum Remaining Value et Degree Heuristic : ";
-            std::cin >> strMRV;
-            std::cout << "\nLeast Constraining Value : ";
-            std::cin >> strLCV;
-
-            strAc3 == "n" ? ac3 = false : ac3 = true;
-            strMRV == "n" ? mrv = false : mrv = true;
-            strLCV == "n" ? leastContrainingValue = false : leastContrainingValue = true;
-    }
    
         //nettoyage de la console
 #if defined _WIN32
