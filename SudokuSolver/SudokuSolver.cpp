@@ -160,7 +160,10 @@ int main()
 
     while (solve)
     {
-        std::cout << "\nEntrez le nom du fichier .ss a utiliser : ";
+        std::cout << "Parametres du backtracking : \nAC-3 : " << std::to_string(ac3) << "\nMinimum Remaining Value et Degree Heuristic : " <<
+            std::to_string(mrv) << "\nLeast Constraining Value : " << std::to_string(leastContrainingValue);
+
+        std::cout << "\n\nEntrez le nom du fichier .ss a utiliser : ";
         std::cin >> filename;
 
         while (filename.size() <= 3)
@@ -192,7 +195,27 @@ int main()
         if (other == "n" || other == "N" || other == "no")
         {
             solve = false;
+            break;
         }
+
+        std::cout << "\nVoulez vous changer les parametres du backtracking ? (y/n)";
+        std::string change;
+        std::cin >> change;
+        if (change == "y" || change == "Y" || change == "yes")
+        {
+            std::cout << "\nIndiquer 'n' pour desactiver (actif par defaut)";
+            std::string strAc3, strMRV, strLCV;
+            std::cout << "\nAC-3 : ";
+            std::cin >> strAc3;
+            std::cout << "\nMinimum Remaining Value et Degree Heuristic : ";
+            std::cin >> strMRV;
+            std::cout << "\nLeast Constraining Value : ";
+            std::cin >> strLCV;
+
+            strAc3 == "n" ? ac3 = false : ac3 = true;
+            strMRV == "n" ? mrv = false : mrv = true;
+            strLCV == "n" ? leastContrainingValue = false : leastContrainingValue = true;
+    }
    
         //nettoyage de la console
 #if defined _WIN32
@@ -207,3 +230,4 @@ int main()
     
 }
 
+ 
