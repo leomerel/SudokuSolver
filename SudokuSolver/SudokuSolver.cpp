@@ -196,13 +196,13 @@ int main()
                     strLCV == "n" ? leastContrainingValue = false : leastContrainingValue = true;
 
                     //nettoyage de la console
-                    #if defined _WIN32
-                                        system("cls");
-                    #elif defined (__LINUX__) || defined(__gnu_linux__) || defined(__linux__)
-                                        system("clear");
-                    #elif defined (__APPLE__)
-                                        system("clear");
-                    #endif
+#if defined _WIN32
+                    system("cls");
+#elif defined (__LINUX__) || defined(__gnu_linux__) || defined(__linux__)
+                    system("clear");
+#elif defined (__APPLE__)
+                    system("clear");
+#endif
 
                     std::cout << "Parametres du backtracking : \nAC-3 : " << std::to_string(ac3) << "\nMinimum Remaining Value et Degree Heuristic : " <<
                         std::to_string(mrv) << "\nLeast Constraining Value : " << std::to_string(leastContrainingValue);
