@@ -84,13 +84,11 @@ bool removeInconsistentValues(std::tuple<int, int> constraint, CSP* csp)
 
 CSP AC3(CSP initCsp)
 {
-    //std::vector<std::tuple<int, int>> queue = initCsp.constraints;
     std::deque<std::tuple<int, int>> queue;
     std::copy(initCsp.constraints.begin(), initCsp.constraints.end(), std::inserter(queue, queue.end()));
     while (queue.size() > 0)
     {
         std::tuple<int, int> firstContraint = queue[0];
-        //queue.erase(queue.begin());
         queue.pop_front();
         if (removeInconsistentValues(firstContraint, &initCsp))
         {
@@ -109,24 +107,33 @@ CSP AC3(CSP initCsp)
 std::vector<std::tuple<int,int>> recursiveBacktracking(std::vector<std::tuple<int,int>> assignement, CSP csp)
 {
     recursiveCount++;
+    //si l'assignement est complet, alors on retourne la solution
     if (assignement.size() == csp.unassignedValues.size())
     {
         std::cout << "Completed sudoku\n";
         return assignement; //assignement sous la forme d'un sudoku complété
     }
 
+    //On choisit une variable qui n'est pas assignée pour la traiter. Pour cela, on utilise :
+    //  - MRV : On choisit la variable avec le plus petit nombre de valeurs légales
+    //  - Degree Heuristic: On choisit la variable avec le plus grand nombre de contraintes sur les variables restantes
     int var = csp.selectUnassignedVariable(assignement,mrv);
+
+    //Least Constaining value : on récupère les valeurs possibles d'une variable, ordonées en
+    //fonction de celles qui réduisent le moins le domaine des prochaines variables
     std::vector<int> orderListDomain = orderDomainValue(var, assignement, csp);
+
     for (int value : (leastContrainingValue? orderListDomain : csp.domains[var]))
     {
-        //std::cout << "\nSelected case : " << var << " with value " << value << " on iteration n" << recursiveCount;
-
+        //si la valeur choisie respecte les contraintes
         if (csp.checkConstraints(var, value, assignement))
         {
+            //On assigne la valeur à la variable et on l'ajoute dans l'assignement
             assignement.emplace_back(std::make_tuple(var, value));
             std::vector<std::tuple<int, int>> result;
             if (ac3)
             {
+                //AC3 : On réduit les domaines
                 CSP modifiedCSP = AC3(csp);
                 result = recursiveBacktracking(assignement, modifiedCSP);
             }
@@ -160,6 +167,7 @@ int main()
     bool solve = true;
     bool ending = true;
 
+    //Gestion des intéractions avec l'utilisateur et lancement de la résolution du sudoku
     while (solve)
     {
         do
