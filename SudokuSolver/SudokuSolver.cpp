@@ -169,6 +169,37 @@ int main()
                 std::cout << "Parametres du backtracking : \nAC-3 : " << std::to_string(ac3) << "\nMinimum Remaining Value et Degree Heuristic : " <<
                     std::to_string(mrv) << "\nLeast Constraining Value : " << std::to_string(leastContrainingValue);
 
+                std::cout << "\nVoulez vous changer les parametres du backtracking ? (y/n)";
+                std::string change;
+                std::cin >> change;
+                if (change == "y" || change == "Y" || change == "yes")
+                {
+                    std::cout << "\nIndiquer 'n' pour desactiver (actif par defaut)";
+                    std::string strAc3, strMRV, strLCV;
+                    std::cout << "\nAC-3 : ";
+                    std::cin >> strAc3;
+                    std::cout << "\nMinimum Remaining Value et Degree Heuristic : ";
+                    std::cin >> strMRV;
+                    std::cout << "\nLeast Constraining Value : ";
+                    std::cin >> strLCV;
+
+                    strAc3 == "n" ? ac3 = false : ac3 = true;
+                    strMRV == "n" ? mrv = false : mrv = true;
+                    strLCV == "n" ? leastContrainingValue = false : leastContrainingValue = true;
+
+                    //nettoyage de la console
+                    #if defined _WIN32
+                                        system("cls");
+                    #elif defined (__LINUX__) || defined(__gnu_linux__) || defined(__linux__)
+                                        system("clear");
+                    #elif defined (__APPLE__)
+                                        system("clear");
+                    #endif
+
+                    std::cout << "Parametres du backtracking : \nAC-3 : " << std::to_string(ac3) << "\nMinimum Remaining Value et Degree Heuristic : " <<
+                        std::to_string(mrv) << "\nLeast Constraining Value : " << std::to_string(leastContrainingValue);
+                }
+
                 std::cout << "\n\nEntrez le nom du fichier .ss a utiliser : ";
                 std::cin >> filename;
             }
@@ -216,25 +247,6 @@ int main()
                 {
                     solve = false;
                     break;
-                }
-
-                std::cout << "\nVoulez vous changer les parametres du backtracking ? (y/n)";
-                std::string change;
-                std::cin >> change;
-                if (change == "y" || change == "Y" || change == "yes")
-                {
-                    std::cout << "\nIndiquer 'n' pour desactiver (actif par defaut)";
-                    std::string strAc3, strMRV, strLCV;
-                    std::cout << "\nAC-3 : ";
-                    std::cin >> strAc3;
-                    std::cout << "\nMinimum Remaining Value et Degree Heuristic : ";
-                    std::cin >> strMRV;
-                    std::cout << "\nLeast Constraining Value : ";
-                    std::cin >> strLCV;
-
-                    strAc3 == "n" ? ac3 = false : ac3 = true;
-                    strMRV == "n" ? mrv = false : mrv = true;
-                    strLCV == "n" ? leastContrainingValue = false : leastContrainingValue = true;
                 }
             }
         }         
